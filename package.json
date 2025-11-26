@@ -1,0 +1,13 @@
+{
+  "name": "phonebook-app",
+  "version": "1.0.0",
+  "description": "Full-stack phonebook application",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "install": "cd backend && npm install",
+    "build": "cd backend && npm install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
