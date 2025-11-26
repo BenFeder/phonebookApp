@@ -7,8 +7,8 @@ export const sendVerificationEmail = async (email, token) => {
   if (!process.env.EMAIL_USER) {
     throw new Error("EMAIL_USER is not configured");
   }
-  if (!process.env.EMAIL_PASSWORD) {
-    throw new Error("EMAIL_PASSWORD (App Password) is not configured");
+  if (!process.env.SENDGRID_API_KEY) {
+    throw new Error("SENDGRID_API_KEY is not configured");
   }
 
   console.log(
