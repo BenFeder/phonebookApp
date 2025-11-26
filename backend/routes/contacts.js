@@ -35,7 +35,7 @@ router.get("/", async (req, res) => {
       .sort({ lastName: 1, firstName: 1 })
       .skip(skip)
       .limit(limit)
-      .populate("createdBy", "email");
+      .populate("createdBy", "_id email");
 
     res.json({
       contacts,
@@ -57,7 +57,7 @@ router.get("/:id", async (req, res) => {
   try {
     const contact = await Contact.findById(req.params.id).populate(
       "createdBy",
-      "email"
+      "_id email"
     );
 
     if (!contact) {

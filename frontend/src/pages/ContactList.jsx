@@ -149,7 +149,8 @@ const ContactList = () => {
               {isAuthenticated &&
                 user &&
                 contact.createdBy &&
-                contact.createdBy.id === user.id && (
+                (contact.createdBy._id === user._id ||
+                  contact.createdBy._id === user.id) && (
                   <div className="mt-4 flex space-x-2">
                     <Link
                       to={`/edit-contact/${contact._id}`}
