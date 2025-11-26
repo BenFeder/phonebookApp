@@ -3,18 +3,20 @@ import nodemailer from "nodemailer";
 export const sendVerificationEmail = async (email, token) => {
   const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
 
-  // Create transporter
+  // Create transporter with SendGrid SMTP
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.sendgrid.net",
+    port: 587, // or 465 for SSL, 25 for unencrypted
+    secure: false, // true for 465, false for other ports
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD, // Use App Password, not regular password
+      user: "apikey", // This is the literal string 'apikey'
+      pass: process.env.SENDGRID_API_KEY, // Your SendGrid API key
     },
   });
 
   // Email options
   const mailOptions = {
-    from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+    from: process.env.EMAIL_FROM,
     to: email,
     subject: "Verify Your Email - Phonebook App",
     html: `
