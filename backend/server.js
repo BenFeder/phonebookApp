@@ -23,6 +23,20 @@ app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/favorites", favoriteRoutes);
 
+// Root route
+app.get("/", (req, res) => {
+  res.json({ 
+    message: "Phonebook API", 
+    version: "1.0.0",
+    endpoints: {
+      health: "/api/health",
+      auth: "/api/auth",
+      contacts: "/api/contacts",
+      favorites: "/api/favorites"
+    }
+  });
+});
+
 // Health check
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK", message: "Server is running" });
@@ -38,17 +52,19 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-}).on('error', (err) => {
-  console.error('Server error:', err);
-  process.exit(1);
+app
+  .listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  })
+  .on("error", (err) => {
+    console.error("Server error:", err);
+    process.exit(1);
+  });
+
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught exception:", err);
 });
 
-process.on('uncaughtException', (err) => {
-  console.error('Uncaught exception:', err);
-});
-
-process.on('unhandledRejection', (err) => {
-  console.error('Unhandled rejection:', err);
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled rejection:", err);
 });
