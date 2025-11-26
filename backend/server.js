@@ -23,6 +23,20 @@ app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/favorites", favoriteRoutes);
 
+// API info route
+app.get("/api", (req, res) => {
+  res.json({
+    message: "Phonebook API",
+    version: "1.0.0",
+    endpoints: {
+      health: "/api/health",
+      auth: "/api/auth (POST /register, POST /login, GET /me)",
+      contacts: "/api/contacts (GET, POST, PUT, DELETE)",
+      favorites: "/api/favorites (GET, POST, DELETE)",
+    },
+  });
+});
+
 // Root route
 app.get("/", (req, res) => {
   res.json({
