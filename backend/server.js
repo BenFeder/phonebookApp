@@ -25,15 +25,15 @@ app.use("/api/favorites", favoriteRoutes);
 
 // Root route
 app.get("/", (req, res) => {
-  res.json({ 
-    message: "Phonebook API", 
+  res.json({
+    message: "Phonebook API",
     version: "1.0.0",
     endpoints: {
       health: "/api/health",
       auth: "/api/auth",
       contacts: "/api/contacts",
-      favorites: "/api/favorites"
-    }
+      favorites: "/api/favorites",
+    },
   });
 });
 
