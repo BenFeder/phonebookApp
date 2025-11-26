@@ -6,6 +6,10 @@ const API_URL =
     ? "https://phonebookapp-holh.onrender.com/api"
     : "/api");
 
+console.log("API_URL:", API_URL);
+console.log("PROD mode:", import.meta.env.PROD);
+console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
+
 // Create axios instance
 const api = axios.create({
   baseURL: API_URL,
