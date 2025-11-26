@@ -15,14 +15,10 @@ connectDB();
 
 // Middleware
 const corsOptions = {
-  origin: [
-    process.env.CLIENT_URL || "http://localhost:5173",
-    "https://phonebookapp-frontend.onrender.com",
-    /\.onrender\.com$/,
-  ],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  origin: true, // Allow all origins - more permissive for debugging
+  credentials: false,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
