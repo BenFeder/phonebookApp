@@ -3,7 +3,7 @@ import axios from "axios";
 const API_URL =
   import.meta.env.VITE_API_URL ||
   (import.meta.env.PROD
-    ? "https://phonebookapp.holh.onrender.com/api"
+    ? "https://phonebookapp-holh.onrender.com/api"
     : "/api");
 
 // Create axios instance
