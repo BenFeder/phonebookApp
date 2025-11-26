@@ -3,6 +3,18 @@ import nodemailer from "nodemailer";
 export const sendVerificationEmail = async (email, token) => {
   const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
 
+  // Validate environment variables
+  if (!process.env.SENDGRID_API_KEY) {
+    throw new Error("SENDGRID_API_KEY is not configured");
+  }
+  if (!process.env.EMAIL_FROM) {
+    throw new Error("EMAIL_FROM is not configured");
+  }
+
+  console.log(
+    `Attempting to send email to ${email} from ${process.env.EMAIL_FROM}`
+  );
+
   // Create transporter with SendGrid SMTP
   const transporter = nodemailer.createTransport({
     host: "smtp.sendgrid.net",
@@ -39,6 +51,16 @@ export const sendVerificationEmail = async (email, token) => {
   };
 
   // Send email
-  await transporter.sendMail(mailOptions);
-  console.log("Verification email sent to:", email);
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Verification email sent successfully to:", email);
+    console.log("Message ID:", info.messageId);
+    return info;
+  } catch (error) {
+    console.error("Failed to send email:", error.message);
+    if (error.response) {
+      console.error("SMTP Response:", error.response);
+    }
+    throw error;
+  }
 };

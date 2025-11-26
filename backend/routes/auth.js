@@ -55,9 +55,11 @@ router.post(
       // Send verification email
       try {
         await sendVerificationEmail(email, emailVerificationToken);
+        console.log(`Verification email sent successfully to ${email}`);
       } catch (emailError) {
-        console.error("Email sending failed:", emailError);
-        // Continue even if email fails
+        console.error("Email sending failed:", emailError.message);
+        console.error("Full error:", emailError);
+        // Continue even if email fails - user is still registered
       }
 
       res.status(201).json({
