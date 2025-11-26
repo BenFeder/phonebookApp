@@ -21,7 +21,13 @@ const Login = () => {
       await login(email, password);
       navigate("/");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      console.error("Login error:", err);
+      console.error("Error response:", err.response);
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Login failed. Please check your connection.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
