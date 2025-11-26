@@ -54,11 +54,14 @@ router.post(
 
       // Send verification email
       try {
+        console.log(`Attempting to send verification email to ${email}...`);
         await sendVerificationEmail(email, emailVerificationToken);
         console.log(`Verification email sent successfully to ${email}`);
       } catch (emailError) {
-        console.error("Email sending failed:", emailError.message);
-        console.error("Full error:", emailError);
+        console.error("=== EMAIL SENDING FAILED ===");
+        console.error("Error message:", emailError.message);
+        console.error("Error stack:", emailError.stack);
+        console.error("============================");
         // Continue even if email fails - user is still registered
       }
 
@@ -106,6 +109,14 @@ router.post(
       const isMatch = await user.comparePassword(password);
       if (!isMatch) {
         return res.status(401).json({ message: "Invalid credentials" });
+      }
+
+      // Check if email is verified
+      if (!user.isEmailVerified) {
+        return res.status(403).json({
+          message:
+            "Please verify your email before logging in. Check your inbox for the verification link.",
+        });
       }
 
       // Generate token

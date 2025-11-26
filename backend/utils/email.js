@@ -4,31 +4,29 @@ export const sendVerificationEmail = async (email, token) => {
   const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
 
   // Validate environment variables
-  if (!process.env.SENDGRID_API_KEY) {
-    throw new Error("SENDGRID_API_KEY is not configured");
+  if (!process.env.EMAIL_USER) {
+    throw new Error("EMAIL_USER is not configured");
   }
-  if (!process.env.EMAIL_FROM) {
-    throw new Error("EMAIL_FROM is not configured");
+  if (!process.env.EMAIL_PASSWORD) {
+    throw new Error("EMAIL_PASSWORD (App Password) is not configured");
   }
 
   console.log(
-    `Attempting to send email to ${email} from ${process.env.EMAIL_FROM}`
+    `Attempting to send email to ${email} from ${process.env.EMAIL_USER}`
   );
 
-  // Create transporter with SendGrid SMTP
+  // Create transporter with Gmail
   const transporter = nodemailer.createTransport({
-    host: "smtp.sendgrid.net",
-    port: 587, // or 465 for SSL, 25 for unencrypted
-    secure: false, // true for 465, false for other ports
+    service: "gmail",
     auth: {
-      user: "apikey", // This is the literal string 'apikey'
-      pass: process.env.SENDGRID_API_KEY, // Your SendGrid API key
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD, // This is the App Password, not your regular Gmail password
     },
   });
 
   // Email options
   const mailOptions = {
-    from: process.env.EMAIL_FROM,
+    from: process.env.EMAIL_USER,
     to: email,
     subject: "Verify Your Email - Phonebook App",
     html: `
@@ -57,10 +55,17 @@ export const sendVerificationEmail = async (email, token) => {
     console.log("Message ID:", info.messageId);
     return info;
   } catch (error) {
-    console.error("Failed to send email:", error.message);
+    console.error("=== EMAIL SENDING ERROR ===");
+    console.error("Error message:", error.message);
+    console.error("Error code:", error.code);
     if (error.response) {
       console.error("SMTP Response:", error.response);
     }
+    if (error.responseCode) {
+      console.error("Response Code:", error.responseCode);
+    }
+    console.error("Full error object:", JSON.stringify(error, null, 2));
+    console.error("=========================");
     throw error;
   }
 };
