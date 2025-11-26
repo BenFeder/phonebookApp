@@ -15,12 +15,14 @@ export const sendVerificationEmail = async (email, token) => {
     `Attempting to send email to ${email} from ${process.env.EMAIL_USER}`
   );
 
-  // Create transporter with Gmail
+  // Create transporter with SendGrid SMTP (more reliable for cloud hosting)
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.sendgrid.net",
+    port: 587,
+    secure: false,
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD, // This is the App Password, not your regular Gmail password
+      user: "apikey",
+      pass: process.env.SENDGRID_API_KEY,
     },
   });
 
