@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import sgMail from "@sendgrid/mail";
 
 export const sendVerificationEmail = async (email, token) => {
   const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
@@ -15,21 +15,12 @@ export const sendVerificationEmail = async (email, token) => {
     `Attempting to send email to ${email} from ${process.env.EMAIL_USER}`
   );
 
-  // Create transporter with SendGrid SMTP (more reliable for cloud hosting)
-  const transporter = nodemailer.createTransport({
-    host: "smtp.sendgrid.net",
-    port: 587,
-    secure: false,
-    auth: {
-      user: "apikey",
-      pass: process.env.SENDGRID_API_KEY,
-    },
-  });
+  // Set SendGrid API key
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-  // Email options
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
+  const msg = {
     to: email,
+    from: process.env.EMAIL_USER, // Must be verified in SendGrid
     subject: "Verify Your Email - Phonebook App",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -50,24 +41,17 @@ export const sendVerificationEmail = async (email, token) => {
     `,
   };
 
-  // Send email
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Verification email sent successfully to:", email);
-    console.log("Message ID:", info.messageId);
-    return info;
+    await sgMail.send(msg);
+    console.log(`Verification email sent successfully to ${email}`);
   } catch (error) {
     console.error("=== EMAIL SENDING ERROR ===");
     console.error("Error message:", error.message);
     console.error("Error code:", error.code);
     if (error.response) {
-      console.error("SMTP Response:", error.response);
+      console.error("SendGrid response body:", error.response.body);
     }
-    if (error.responseCode) {
-      console.error("Response Code:", error.responseCode);
-    }
-    console.error("Full error object:", JSON.stringify(error, null, 2));
     console.error("=========================");
-    throw error;
+    throw new Error("Failed to send verification email");
   }
 };
