@@ -63,6 +63,11 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "OK", message: "Server is running" });
 });
 
+// Keep-alive endpoint (prevents Render from sleeping)
+app.get("/api/keep-alive", (req, res) => {
+  res.json({ status: "alive", timestamp: new Date().toISOString() });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
